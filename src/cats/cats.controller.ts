@@ -1,13 +1,26 @@
-import { Controller, Delete, Get, Patch, Post, Put } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  Patch,
+  Post,
+  Put,
+  UseFilters,
+} from '@nestjs/common';
 import { CatsService } from './cats.service';
+import { HttpExceptionFilter } from 'src/http-exception.filter';
 
+@UseFilters(HttpExceptionFilter) // 클래스에 데코레이터를 사용하면 해당 컨트롤러에 전체 api 대한 요청에 대해서 HttpExceptionFilter에 전달됨
 @Controller('cats')
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
 
   @Get()
+  // @UseFilters(HttpExceptionFilter) // api위에 데코레이터를 사용하면 해당 api에 대한 요청에 대해서만 HttpExceptionFilter에 전달됨
   getAllCat() {
-    return 'all cat';
+    throw new HttpException('api is broken', 401);
+    // return 'all cat';
   }
 
   @Get(':id')
