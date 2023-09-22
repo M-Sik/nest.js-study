@@ -7,6 +7,6 @@ async function bootstrap() {
   // 전역적으로 예외처리 필터를 사용하기 위해 사용
   app.useGlobalFilters(new HttpExceptionFilter());
   // 포트 열기
-  await app.listen(8000);
+  await app.listen(process.env.PORT);
 }
 bootstrap();
