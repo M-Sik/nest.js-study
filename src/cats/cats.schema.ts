@@ -30,6 +30,18 @@ export class Cat extends Document {
   @Prop()
   @IsString()
   imgUrl: string;
+
+  readonly readOnlyData: { id: string; email: string; name: string };
 }
 
 export const CatSchema = SchemaFactory.createForClass(Cat);
+
+// virtual 필드란 실제로 디비에 저장되는 필드는 아니지만 서비스 내부 비지니스 로직에서 사용할 수 있도록 지원해주는 필드임
+// 회원가입 후 패스워드를 클라이언트에 노출시키지 않기 위해 사용
+CatSchema.virtual('readOnlyData').get(function (this: Cat) {
+  return {
+    id: this.id,
+    email: this.email,
+    name: this.name,
+  };
+});

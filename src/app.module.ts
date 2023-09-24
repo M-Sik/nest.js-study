@@ -14,7 +14,7 @@ import * as mongoose from 'mongoose';
 })
 // 미들웨어를 사용하기위해 미들웨어를 등록
 export class AppModule implements NestModule {
-  private readonly isDev: boolean = process.env.Mode === 'dev' ? true : false;
+  private readonly isDev: boolean = process.env.MODE === 'dev' ? true : false;
 
   configure(consumer: MiddlewareConsumer) {
     // Logger 미들웨어 등록
