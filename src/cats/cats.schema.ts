@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaOptions } from 'mongoose';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-
+// 타임 스탬프를 찍기위해 사용
 const options: SchemaOptions = {
   timestamps: true,
 };
