@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaOptions } from 'mongoose';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 // 타임 스탬프를 찍기위해 사용
 const options: SchemaOptions = {
   timestamps: true,
@@ -8,8 +9,14 @@ const options: SchemaOptions = {
 
 @Schema(options)
 export class Cat extends Document {
-  // Prop에 옵션을 전달할수 있으며, required의 경우 기본값이 false임
+  @ApiProperty({
+    // 스웨거에 예시를 넣기 위함
+    example: 'rlaaudtlr233@gmail.com',
+    description: '이메일',
+    required: true,
+  })
   @Prop({
+    // Prop에 옵션을 전달할수 있으며, required의 경우 기본값이 false임
     required: true,
     unique: true,
   })
@@ -17,11 +24,21 @@ export class Cat extends Document {
   @IsNotEmpty()
   email: string;
 
+  @ApiProperty({
+    example: '콩이',
+    description: '고양이 이름',
+    required: true,
+  })
   @Prop({ required: true })
   @IsString()
   @IsNotEmpty()
   name: string;
 
+  @ApiProperty({
+    example: 'a1a1a1a1',
+    description: '비밀번호',
+    required: true,
+  })
   @Prop({ required: true })
   @IsString()
   @IsNotEmpty()
