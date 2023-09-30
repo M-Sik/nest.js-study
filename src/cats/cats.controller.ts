@@ -5,12 +5,17 @@ import { SuceessInterceptor } from 'src/common/interceptors/success.interceptor'
 import { CatRequestDto } from './dto/cats.request.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ReadonlyCatDto } from './dto/cat.dto';
+import { AuthService } from 'src/auth/auth.service';
+import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 
 @UseFilters(HttpExceptionFilter) // 클래스에 데코레이터를 사용하면 해당 컨트롤러에 전체 api 대한 요청에 대해서 HttpExceptionFilter에 전달됨
 @UseInterceptors(SuceessInterceptor) // 인터셉터 프로바이터 주입
 @Controller('cats')
 export class CatsController {
-  constructor(private readonly catsService: CatsService) {}
+  constructor(
+    private readonly catsService: CatsService,
+    private readonly authService: AuthService,
+  ) {}
 
   @ApiOperation({ summary: '현재 고양이 가져오기' })
   @Get()
@@ -36,8 +41,8 @@ export class CatsController {
 
   @ApiOperation({ summary: '로그인' })
   @Post('login')
-  logIn() {
-    return 'login';
+  logIn(@Body() data: LoginRequestDto) {
+    return this.authService.jwtLogIn(data);
   }
 
   @ApiOperation({ summary: '로그아웃' })
