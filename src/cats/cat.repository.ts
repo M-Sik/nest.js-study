@@ -7,6 +7,12 @@ import { CatRequestDto } from './dto/cats.request.dto';
 @Injectable()
 export class CatsRepository {
   constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
+  // catId를 인자로 받으며, id에 해당하는 고양이의 정보를 가져온다.
+  // select를 통해 정보에서 password를 제외
+  async findCatByIdWithoutPassword(catId: string): Promise<Cat | null> {
+    const cat = await this.catModel.findById(catId).select('-password');
+    return cat;
+  }
 
   async findCatByEmail(email: string): Promise<Cat | null> {
     // 이메일이 존재 하는지
