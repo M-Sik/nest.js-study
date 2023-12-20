@@ -3,20 +3,24 @@ import {
   Controller,
   Get,
   Post,
+  UploadedFiles,
   UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { CatsService } from './cats.service';
+import { CatsService } from '../services/cats.service';
 import { HttpExceptionFilter } from 'src/common/exceptions/http-exception.filter';
 import { SuceessInterceptor } from 'src/common/interceptors/success.interceptor';
-import { CatRequestDto } from './dto/cats.request.dto';
+import { CatRequestDto } from '../dto/cats.request.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ReadonlyCatDto } from './dto/cat.dto';
+import { ReadonlyCatDto } from '../dto/cat.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/common/utils/multer.options';
+import { Cat } from '../cats.schema';
 
 @UseFilters(HttpExceptionFilter) // 클래스에 데코레이터를 사용하면 해당 컨트롤러에 전체 api 대한 요청에 대해서 HttpExceptionFilter에 전달됨
 @UseInterceptors(SuceessInterceptor) // 인터셉터 프로바이터 주입
@@ -64,8 +68,14 @@ export class CatsController {
   }
 
   @ApiOperation({ summary: '고양이 이미지 업로드' })
-  @Post('upload/cats')
-  uploadCatImg() {
-    return 'uploadImg';
+  // 단일 파일 업로드시
+  // @UseInterceptors(FileInterceptor('file'))
+  // 여러개 파일 업로드시, "files"라는 키로 10개까지 가능
+  @UseInterceptors(FilesInterceptor('files', 10, multerOptions('cats')))
+  @UseGuards(JwtAuthGuard)
+  @Post('upload')
+  uploadCatImg(@UploadedFiles() files: Array<Express.Multer.File>, @CurrentUser() cat: Cat) {
+    console.log(files);
+    return this.catsService.uploadImg(cat, files);
   }
 }

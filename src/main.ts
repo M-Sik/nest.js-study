@@ -4,9 +4,11 @@ import { HttpExceptionFilter } from './common/exceptions/http-exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as expressBasicAuth from 'express-basic-auth';
+import * as path from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   // class validation을 사용하기위해 등록
   app.useGlobalPipes(new ValidationPipe());
   // 전역적으로 예외처리 필터를 사용하기 위해 사용
@@ -20,6 +22,9 @@ async function bootstrap() {
       },
     }),
   );
+  app.useStaticAssets(path.join(__dirname, './common', 'uploads'), {
+    prefix: '/media',
+  });
   // 스웨거 사용하기위한 설정
   const config = new DocumentBuilder()
     .setTitle('C.I.C')

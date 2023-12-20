@@ -7,6 +7,14 @@ import { CatRequestDto } from './dto/cats.request.dto';
 @Injectable()
 export class CatsRepository {
   constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
+
+  async findByIdAndUpdateImg(id: string, fileName: string) {
+    const cat = await this.catModel.findById(id); // 현재 로그인된 고양이의 정보를 받음
+    cat.imgUrl = `http://localhost:8000/media/${fileName}`; // 고양이정보에 디폴트 이미지 값을 넣어줌
+    const newCat = await cat.save(); // 변경된 고양이 사항을 save메서드로 db에 저장시킴
+    console.log(newCat);
+    return newCat.readOnlyData;
+  }
   // catId를 인자로 받으며, id에 해당하는 고양이의 정보를 가져온다.
   // select를 통해 정보에서 password를 제외
   async findCatByIdWithoutPassword(catId: string): Promise<Cat | null> {
