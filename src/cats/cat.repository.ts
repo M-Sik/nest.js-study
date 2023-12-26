@@ -8,6 +8,10 @@ import { CatRequestDto } from './dto/cats.request.dto';
 export class CatsRepository {
   constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
 
+  async findAll() {
+    return await this.catModel.find();
+  }
+
   async findByIdAndUpdateImg(id: string, fileName: string) {
     const cat = await this.catModel.findById(id); // 현재 로그인된 고양이의 정보를 받음
     cat.imgUrl = `http://localhost:8000/media/${fileName}`; // 고양이정보에 디폴트 이미지 값을 넣어줌
