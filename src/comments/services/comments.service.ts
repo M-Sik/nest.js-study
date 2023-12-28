@@ -8,4 +8,7 @@ export class CommentsService {
     console.log(id, comments);
     return 'hello world';
   }
+  async plusLike(id: string) {
+    return id;
+  }
 }
