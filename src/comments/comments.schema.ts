@@ -4,6 +4,7 @@ import { IsNotEmpty, IsPositive, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 // 타임 스탬프를 찍기위해 사용
 const options: SchemaOptions = {
+  collection: 'comments',
   timestamps: true,
 };
 
